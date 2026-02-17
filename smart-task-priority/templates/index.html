@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Smart Task Manager</h1>
+
+    <!-- Form to add task -->
+    <form method="post">
+        <label>Task Name:</label>
+        <input type="text" name="task_name" required><br><br>
+
+        <label>Deadline (days left):</label>
+        <input type="number" name="deadline" min="1" required><br><br>
+
+        <label>Importance (1-5):</label>
+        <input type="number" name="importance" min="1" max="5" required><br><br>
+
+        <label>Effort (1-5):</label>
+        <input type="number" name="effort" min="1" max="5" required><br><br>
+
+        <button type="submit" name="add_task">Add Task</button>
+    </form>
+
+    <!-- Display all tasks with Done button -->
+    {% if tasks %}
+        <h2>Task List (sorted by priority)</h2>
+        <table border="1" style="margin:auto; padding:10px;">
+            <tr>
+                <th>Task Name</th>
+                <th>Deadline</th>
+                <th>Importance</th>
+                <th>Effort</th>
+                <th>Priority</th>
+                <th>Done</th>
+            </tr>
+            {% for task in tasks %}
+            <tr {% if task.done %}style="text-decoration: line-through; color: gray;"{% endif %}>
+                <td>{{ task.name }}</td>
+                <td>{{ task.deadline }}</td>
+                <td>{{ task.importance }}</td>
+                <td>{{ task.effort }}</td>
+                <td>{{ task.priority }}</td>
+                <td>
+                    {% if not task.done %}
+                    <form method="post" style="margin:0;">
+                        <button type="submit" name="done_task" value="{{ task.id }}">Mark Done</button>
+                    </form>
+                    {% else %}
+                        Done
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
